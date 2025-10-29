@@ -6,6 +6,7 @@ import os
 # ---------------------- APP CONFIGURATION ----------------------
 st.set_page_config(page_title="Employee Attrition Predictor", layout="wide")
 
+# Project metadata
 DEV_NAME = "Mohammed Tailor"
 COLLEGE = "RCOEM, Nagpur"
 BRANCH = "AIML"
@@ -15,16 +16,19 @@ LINKEDIN = "https://www.linkedin.com/in/mohammed-tailor-002968288/"
 EMAIL = "mohammedtailor5253@gmail.com"
 PHONE = "+91-9067718254"
 PROJECT_TITLE = "Employee Attrition Predictor"
-PROJECT_DESC = "Predict whether an employee is likely to leave the organization using an XGBoost model with preprocessing pipeline."
+PROJECT_DESC = (
+    "A machine learning web app to predict whether an employee is likely to leave "
+    "the organization using a tuned XGBoost model and preprocessing pipeline."
+)
 
-# ---------------------- LOAD MODEL ----------------------
+# ---------------------- LOAD MODEL PIPELINE ----------------------
 @st.cache_resource
 def load_pipeline():
     model_path = "xgb_attrition_pipeline.joblib"
 
     st.sidebar.write("### Debug Info")
-    st.sidebar.write(f"Current directory: {os.getcwd()}")
-    st.sidebar.write(f"Files: {os.listdir('.')}")
+    st.sidebar.write(f"📁 Current directory: {os.getcwd()}")
+    st.sidebar.write(f"📂 Files: {os.listdir('.')}")
 
     if not os.path.exists(model_path):
         st.sidebar.error(f"❌ Model file not found: {model_path}")
@@ -32,12 +36,13 @@ def load_pipeline():
 
     try:
         pipeline = joblib.load(model_path)
-        st.sidebar.success("✅ Model loaded successfully!")
+        st.sidebar.success("✅ Model pipeline loaded successfully!")
         return pipeline
     except Exception as e:
-        st.sidebar.error(f"Error loading model: {e}")
-        st.sidebar.info("Ensure scikit-learn and XGBoost versions match the training environment.")
+        st.sidebar.error(f"❌ Error loading model: {e}")
+        st.sidebar.info("Ensure you are using compatible versions of scikit-learn and XGBoost.")
         return None
+
 
 pipeline = load_pipeline()
 
@@ -51,7 +56,7 @@ with tabs[0]:
     st.markdown("---")
 
     if pipeline is None:
-        st.error("❌ Model pipeline not loaded! Please ensure 'xgb_attrition_pipeline.joblib' is in this folder.")
+        st.error("❌ Model pipeline not loaded! Ensure 'xgb_attrition_pipeline.joblib' is in this folder.")
     else:
         st.success("✅ Model loaded and ready for prediction!")
 
@@ -60,6 +65,7 @@ with tabs[0]:
     with st.form("attrition_form"):
         col1, col2, col3 = st.columns(3)
 
+        # --- Column 1 ---
         with col1:
             Age = st.number_input("Age", 18, 65, 30)
             DailyRate = st.number_input("Daily Rate", 100, 1500, 800)
@@ -70,6 +76,7 @@ with tabs[0]:
             MaritalStatus = st.selectbox("Marital Status", ["Single", "Married", "Divorced"])
             OverTime = st.selectbox("OverTime", ["No", "Yes"])
 
+        # --- Column 2 ---
         with col2:
             NumCompaniesWorked = st.number_input("Num Companies Worked", 0, 20, 3)
             TotalWorkingYears = st.number_input("Total Working Years", 0, 40, 8)
@@ -80,6 +87,7 @@ with tabs[0]:
             PerformanceRating = st.selectbox("Performance Rating (1–4)", [1, 2, 3, 4], index=3)
             YearsSinceLastPromotion = st.number_input("Years Since Last Promotion", 0, 20, 2)
 
+        # --- Column 3 ---
         with col3:
             MonthlyIncome = st.number_input("Monthly Income", 1000, 20000, 5000)
             HourlyRate = st.number_input("Hourly Rate", 30, 100, 60)
@@ -96,27 +104,30 @@ with tabs[0]:
             BusinessTravel = st.selectbox("Business Travel", ["Non-Travel", "Travel_Rarely", "Travel_Frequently"])
         with col6:
             JobRole = st.selectbox(
-                "Job Role", [
+                "Job Role",
+                [
                     "Sales Executive", "Research Scientist", "Laboratory Technician",
                     "Manager", "Human Resources", "Manufacturing Director",
                     "Sales Representative", "Healthcare Representative", "Research Director"
                 ]
             )
 
-        EducationField = st.selectbox("Education Field", [
-            "Life Sciences", "Medical", "Marketing", "Technical Degree", "Human Resources", "Other"
-        ])
+        EducationField = st.selectbox(
+            "Education Field",
+            ["Life Sciences", "Medical", "Marketing", "Technical Degree", "Human Resources", "Other"]
+        )
         Education = st.selectbox("Education (1–5)", [1, 2, 3, 4, 5], index=2)
 
         submitted = st.form_submit_button("🔮 Predict")
 
     if submitted:
         if pipeline is None:
-            st.error("❌ Pipeline not found! Make sure 'xgb_attrition_pipeline.joblib' is in the directory.")
+            st.error("❌ Pipeline not found! Make sure 'xgb_attrition_pipeline.joblib' exists.")
         else:
             try:
-                preprocessor, xgb_model = pipeline  # unpack tuple
+                preprocessor, best_xgb = pipeline  # unpack tuple
 
+                # Prepare input DataFrame
                 input_data = pd.DataFrame([{
                     "Age": Age,
                     "DailyRate": DailyRate,
@@ -148,10 +159,10 @@ with tabs[0]:
                     "EducationField": EducationField
                 }])
 
-                # Preprocess and predict
+                # Preprocess + predict
                 transformed = preprocessor.transform(input_data)
-                pred = xgb_model.predict(transformed)[0]
-                prob = xgb_model.predict_proba(transformed)[:, 1][0]
+                pred = best_xgb.predict(transformed)[0]
+                prob = best_xgb.predict_proba(transformed)[:, 1][0]
 
                 st.markdown("---")
                 st.subheader("📈 Prediction Result")
@@ -169,20 +180,20 @@ with tabs[0]:
 
             except Exception as e:
                 st.error(f"Prediction failed: {e}")
-                st.info("Ensure feature names match model's training schema.")
+                st.info("Ensure input feature names match those used in training.")
 
 # ---------------------- ABOUT TAB ----------------------
 with tabs[1]:
     st.header("📘 About the Project")
     st.write(PROJECT_DESC)
-    st.markdown("""### Features:
+    st.markdown("""
+    ### 🔧 Features:
     - **Demographics:** Age, Gender, Marital Status  
     - **Job Details:** Role, Department, Satisfaction Metrics  
     - **Compensation:** Income, Salary Hike, Stock Options  
     - **Work Environment:** Work-Life Balance, Overtime  
-    - **Career Path:** Promotions, Training, Experience
+    - **Career Path:** Promotions, Training, Experience  
     """)
-
     st.markdown("### 👨‍💻 Developer Info")
     st.write(f"**Name:** {DEV_NAME}")
     st.write(f"**College:** {COLLEGE}")
