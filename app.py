@@ -11,8 +11,7 @@ st.write("A simple ML web app to predict whether an employee will leave the comp
 @st.cache_resource
 def load_model():
     try:
-        pipeline = joblib.load("xgb_attrition_pipeline.joblib")
-        return pipeline
+        joblib.dump((preprocessor, best_xgb), "xgb_attrition_pipeline.joblib")
     except Exception as e:
         st.error(f"Error loading model: {e}")
         return None
