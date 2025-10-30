@@ -24,7 +24,7 @@ PROJECT_DESC = (
 # Function to load the saved model pipeline
 @st.cache_resource
 def load_pipeline():
-    model_path = "xgb_attrition_pipeline.joblib"
+    model_path = "xgb_attrition_pipeline.pkl"
     st.sidebar.write("### Debug Info")
     st.sidebar.write(f"📁 Current directory: {os.getcwd()}")
     st.sidebar.write(f"📂 Files: {os.listdir('.')}")
@@ -34,7 +34,9 @@ def load_pipeline():
         return None
 
     try:
-        pipeline = joblib.load(model_path)
+        import pickle
+        with open(model_path, "rb") as f:
+            pipeline = pickle.load(f)
         st.sidebar.success("✅ Model pipeline loaded successfully!")
         return pipeline
     except Exception as e:
