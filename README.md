@@ -1,119 +1,153 @@
+```markdown
 # 🧠 Employee Attrition Predictor
 
-A machine learning web app built with **Streamlit** and **XGBoost** to predict whether an employee is likely to leave an organization.
+A Streamlit web app that uses a trained XGBoost pipeline to predict whether an employee is likely to leave an organisation. This repository contains a production-ready Streamlit app (app.py), a serialized model pipeline (xgb_attrition_pipeline.pkl), notebooks and resources used during development.
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)
-![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)
-![XGBoost](https://img.shields.io/badge/XGBoost-EB5E28?style=flat&logo=xgboost&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
+Badges
+- Python (runtime specified in runtime.txt)
+- Streamlit
+- XGBoost
+- Scikit-learn
+- Pandas
 
 ---
 
 ## 📌 Overview
-This project predicts employee attrition using a trained **XGBoost model** integrated with a **Streamlit** web app for real-time predictions.  
-It is designed for HR analytics teams to detect potential attrition risks and make data-driven decisions.
+
+This project demonstrates a complete end-to-end ML workflow for predicting employee attrition:
+- Data exploration and preprocessing (notebooks/)
+- Model training and evaluation
+- A deployed/publishable Streamlit web app (app.py) that loads a serialized pipeline and outputs real-time predictions
+
+The app is designed for HR analytics prototyping to surface employees at higher risk of leaving so teams can investigate and take action.
 
 ---
 
-## ⚙️ Features
-- ⚡ Real-time employee attrition prediction  
-- 🧮 Preprocessing pipeline with **scaling**, **encoding**, and **balancing**  
-- 📊 Visualization and data exploration (EDA)  
-- 🤖 ML pipeline: **XGBoost + Scikit-learn ColumnTransformer**  
-- 🎨 Interactive Streamlit interface  
+---
+
+## Features
+
+- Real-time attrition prediction via Streamlit
+- Preprocessing pipeline embedded with the model (scaling, encoding, etc.)
+- Trained XGBoost classifier serialized as a pipeline
+- Notebooks for EDA and training (notebooks/)
+- Render configuration included for quick deployment (render.yaml)
 
 ---
 
-## 🧩 Tech Stack
-- **Python 3.10+** (recommended)
-- **Streamlit**, **Pandas**, **NumPy**, **Scikit-learn**, **XGBoost**, **Joblib**, **Matplotlib**, **Seaborn**
+## Tech stack
+
+- Python 3.10 (see runtime.txt)
+- Streamlit
+- XGBoost
+- Scikit-learn
+- Pandas, NumPy
+- Joblib / pickle for model serialization
+- Matplotlib / Seaborn for visualizations in notebooks
 
 ---
 
-## 🧹 Data Preprocessing
-The preprocessing pipeline ensures clean, standardized input before model training:
+## Quickstart (local)
 
-| Step | Description |
-|------|--------------|
-| **1. Handling Missing Values** | Cleaned and filled missing data where necessary |
-| **2. Encoding** | Used `OneHotEncoder` for categorical features |
-| **3. Scaling** | Applied both `StandardScaler` and `MinMaxScaler` for numeric normalization |
-| **4. Balancing** | Addressed class imbalance using **SMOTE** (Synthetic Minority Oversampling Technique) |
-| **5. Feature Selection** | Retained only the most important predictors based on correlation and XGBoost feature importance |
-
----
-
-## 📊 Exploratory Data Analysis (EDA)
-Comprehensive EDA was performed to understand data patterns and relationships:
-
-- Distribution plots of numeric variables  
-- Categorical frequency and attrition ratio plots  
-- Correlation heatmap of numeric features  
-- Boxplots and violin plots to detect outliers  
-- Visualization tools used: **Matplotlib**, **Seaborn**
-
----
-
-## 🧠 Model Info
-
-| Aspect | Details |
-|--------|----------|
-| **Algorithm** | XGBoost Classifier |
-| **Preprocessing** | ColumnTransformer (Scaling + OneHotEncoding) |
-| **Balancing** | SMOTE applied on minority class |
-| **Evaluation Metrics** | Precision, Recall, F1-score, ROC-AUC |
-| **Model Serialization** | Joblib |
-| **Accuracy** | ~90% on test data |
-
----
-
-## 🚀 Setup Instructions
-
-### 1. Clone the repository
+1. Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/ML_Mini_Project_27.git
-cd ML_Mini_Project_27
+git clone https://github.com/tailormst/Employee-Attrition-Predictor.git
+cd Employee-Attrition-Predictor
 ```
-### 2. Create a virtual environment
+
+2. Create and activate a virtual environment (example using python3.10)
 ```bash
-py -3.10 -m venv ml_env
-ml_env\Scripts\activate
+python3.10 -m venv venv
+source venv/bin/activate   # macOS / Linux
+# or
+venv\Scripts\activate      # Windows (PowerShell/CMD)
 ```
-### 3. Install dependencies
+
+3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
-### 4. Run the app
+
+4. Run the Streamlit app
 ```bash
 streamlit run app.py
 ```
 
-#### 📁 Project Structure
-```bash
-ML_Mini_Project_27/
-├── app.py                          # Streamlit frontend app
-├── xgb_model.joblib                # Trained XGBoost model
+The app will open in your browser (default http://localhost:8501). The Streamlit `app.py` loads `xgb_attrition_pipeline.pkl` to perform predictions — be sure that file remains in the repository root.
+
+---
+
+## Files & Project structure
+
+Use this as the authoritative structure for this repo:
+
+```
+Employee-Attrition-Predictor/
+├── app.py                          # Streamlit frontend application
+├── xgb_attrition_pipeline.pkl      # Trained XGBoost pipeline used by the app
 ├── requirements.txt                # Python dependencies
-├── data/                           # (optional) Raw and processed datasets
-├── notebooks/                      # Jupyter notebooks for EDA & model training
-└── README.md                       # Documentation               
+├── runtime.txt                     # Runtime used (e.g., python-3.10)
+├── render.yaml                     # Render deployment configuration
+├── data/                           # (optional) Place datasets here (not versioned)
+├── notebooks/                      # EDA and training notebooks
+├── Mini project report B27.docx    # Project report / write-up
+└── README.md                       # This documentation
 ```
 
-### 📈 Visualization Examples
-🔹 Attrition distribution by department and job role
+File descriptions:
+- app.py: the Streamlit UI and inference code. It expects preprocessed input fields and feeds data to the serialized pipeline.
+- xgb_attrition_pipeline.pkl: the trained pipeline (preprocessing + XGBoost). Do not commit sensitive data to the repo.
+- requirements.txt: pinned or minimal dependency versions for reproducible installs.
+- render.yaml: simple configuration for deploying to Render.com (if you use it).
+- notebooks/: analysis, feature engineering and model training notebooks. Use them to re-train or to explore feature importance and metrics.
 
-🔹 Correlation heatmap of numeric features
+---
 
-🔹 Feature importance chart from XGBoost
+## Model & data notes
 
-🔹 ROC-AUC curve visualization
+- Model: XGBoost classifier embedded in a scikit-learn Pipeline (serialized as `xgb_attrition_pipeline.pkl`).
+- Preprocessing (applies inside the pipeline): scaling, encoding, and any feature transformations required by the model.
+- Evaluation metrics used during development: precision, recall, F1-score, ROC-AUC.
+- The dataset used during development is not included here. If you intend to re-train, add your dataset to `data/` (or point the notebooks to a local path). Ensure any employee data is handled securely and complies with privacy rules.
 
-(These were created during the model development phase using Matplotlib and Seaborn.)
+---
 
-### 🛡️ License
-```bash
-Licensed under the MIT License.
+## Deployment
+
+- Local: `streamlit run app.py`
+- Render: `render.yaml` is included; you can deploy the repository to Render and it will use `runtime.txt` and `requirements.txt` to build. If you deploy, ensure the model file `xgb_attrition_pipeline.pkl` is present or update the deployment to retrieve the model from secure storage.
+
+---
+
+## Recommendations & Next steps
+
+1. Add a LICENSE file (README currently mentions MIT — add an explicit LICENSE file).
+2. Add a small CONTRIBUTING.md and CODE_OF_CONDUCT.md if you want external contributors.
+3. Add tests (unit tests for data transforms and a smoke test for the app).
+4. Add a GitHub Actions workflow to run tests and linting on push/PR.
+5. If model size is large, consider storing the model in an external artifact store (Git LFS, S3, or an artifacts registry) and loading it at runtime to keep the repo lean.
+6. Add example screenshots or a short demo GIF in README to show the app UI and sample outputs.
+7. Document expected input ranges and missing-value behavior in the README or in a separate docs file.
+8. If the dataset contains PII, add notes about anonymization and data storage.
+
+---
+
+## Troubleshooting
+
+- "Module not found" errors: ensure your virtual environment is activated and you've installed the exact packages from `requirements.txt`.
+- Port conflicts when running Streamlit: run `streamlit run app.py --server.port <PORT>` to change the port.
+- Model load errors: verify `xgb_attrition_pipeline.pkl` exists and was created with compatible versions of scikit-learn and XGBoost. If not, re-run the training notebook and re-serialize the pipeline.
+
+---
+
+## License
+
+Please add a LICENSE file to the repository. The previous README referenced the MIT license — if you want MIT, create a `LICENSE` file containing the MIT text.
+
+---
+
+## Contact
+
+Maintainer: tailormst
 ```
-
-## ⭐ If you found this project helpful, please give it a star on GitHub!
+```
