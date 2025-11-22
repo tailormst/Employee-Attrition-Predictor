@@ -1,4 +1,3 @@
-```markdown
 # 🧠 Employee Attrition Predictor
 
 A Streamlit web app that uses a trained XGBoost pipeline to predict whether an employee is likely to leave an organisation. This repository contains a production-ready Streamlit app (app.py), a serialized model pipeline (xgb_attrition_pipeline.pkl), notebooks and resources used during development.
@@ -23,8 +22,6 @@ The app is designed for HR analytics prototyping to surface employees at higher 
 
 ---
 
----
-
 ## Features
 
 - Real-time attrition prediction via Streamlit
@@ -44,8 +41,6 @@ The app is designed for HR analytics prototyping to surface employees at higher 
 - Pandas, NumPy
 - Joblib / pickle for model serialization
 - Matplotlib / Seaborn for visualizations in notebooks
-
----
 
 ## Quickstart (local)
 
@@ -149,5 +144,3 @@ Please add a LICENSE file to the repository. The previous README referenced the 
 ## Contact
 
 Maintainer: tailormst
-```
-```
